@@ -1,45 +1,55 @@
-'use client';
+import { fetchProductById, fetchReviewById } from '@/app/lib/data';
+import Form from '@/app/components/ReviewForm';
+import { Button } from '@/app/ui/button';
+import Link from 'next/link';
 
-import ReviewForm from '@/app/components/ReviewForm';
+export default async function ProductPage(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    const id = params.id;
+    const product = await fetchProductById(id);
 
-const mockProduct = {
-  id: '1',
-  name: 'Laptop',
-  price: 999.99,
-  imageUrl: '/laptop.jpg',
-  description: 'A high-end laptop.',
-};
+    if (!product) {
+        return <p>Product not found.</p>;
+      }
 
-const mockReviews = [
-  { id: 1, name: 'John', comment: 'Great product!' },
-  { id: 2, name: 'Jane', comment: 'Highly recommend it.' },
-];
+    const reviews = await fetchReviewById(id);
 
-export default function ProductDetailPage() {
-  const product = mockProduct; 
-  const reviews = mockReviews;
-
+    if (!reviews) {
+        return <p>No reviews yet.</p>
+    }
   return (
-    <main className="p-6">
-      <div className="mb-6">
-        <img src={product.imageUrl} alt={product.name} className="w-full h-64 object-cover rounded" />
-        <h1 className="text-3xl font-bold mt-4">{product.name}</h1>
-        <p className="text-lg text-gray-700">${product.price}</p>
-        <p className="mt-2">{product.description}</p>
-      </div>
+    <main>
+    <div className="border p-4 rounded-lg shadow hover:shadow-md transition">
+      <img src={product.image_url} alt={product.name} className="w-full h-96 object-contain rounded" />
+      <h3 className="text-lg font-semibold mt-2">{product.name}</h3>
+      <p className="text-gray-700">{product.price} NIS</p>
+      <p>{product.description}</p>
+    </div>
 
-      <div>
-        <h2 className="text-xl font-semibold mb-2">Reviews</h2>
-        <ul className="mb-4">
-          {reviews.map(review => (
-            <li key={review.id} className="mb-2 border-b pb-2">
-              <strong>{review.name}:</strong> {review.comment}
+      <h2 className="text-xl font-semibold mb-2">Reviews</h2>
+      {reviews.length > 0 ? (
+        <ul className="space-y-2">
+          {reviews.map((review) => (
+            <li key={review.id} className="border rounded p-3">
+              <p className="text-sm text-gray-800">⭐ {review.rating} / 5</p>
+              <p className="text-sm text-gray-600">{review.comment}</p>
+              <p className="text-xs text-gray-400">{new Date(review.created_at).toLocaleDateString()}</p>
             </li>
           ))}
         </ul>
+      ) : (
+        <p>No reviews yet.</p>
+      )} 
 
-        <ReviewForm onSubmit={(data) => console.log('Submitted review:', data)} />
-      </div>
+          {/* <Form productId={product.id} /> */}
+          <Link href={`/add-review/${product.id}`}>
+    <Button>Add Review</Button>
+    </Link>
+
+      <Link href={'/'}>
+    <Button>Home Page</Button>
+    </Link>
+
     </main>
   );
 }
