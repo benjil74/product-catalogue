@@ -15,7 +15,7 @@ const mockReviews = [
   { id: 2, name: 'Jane', comment: 'Highly recommend it.' },
 ];
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
+export default function ProductDetailPage() {
   const product = mockProduct; 
   const reviews = mockReviews;
 
