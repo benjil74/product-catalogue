@@ -5,6 +5,7 @@ import {
 } from './definitions';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+export const dynamic = 'force-dynamic';
 
 export async function fetchProducts() {
   try {

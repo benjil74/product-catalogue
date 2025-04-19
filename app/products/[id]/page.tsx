@@ -41,15 +41,17 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
         <p>No reviews yet.</p>
       )} 
 
-          {/* <Form productId={product.id} /> */}
           <Link href={`/add-review/${product.id}`}>
+          <div className='p-4'>
     <Button>Add Review</Button>
+    </div>
     </Link>
-
+    
+      <div className='p-4'>
       <Link href={'/'}>
-    <Button>Home Page</Button>
+    <Button className='bg-gray-500  hover:bg-gray-400'>Home Page</Button>
     </Link>
-
+    </div>
     </main>
   );
 }
